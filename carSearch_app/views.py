@@ -9,28 +9,17 @@ from rest_framework.views import APIView
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, DjangoModelPermissions
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
-from rest_framework.generics import GenericAPIView
+from rest_framework import generics
 
-class ReviewDetail(RetrieveModelMixin, GenericAPIView):
+class ReviewList(generics.ListAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request,*args, **kwargs)
-    
-class ReviewList(ListModelMixin, CreateModelMixin, GenericAPIView):
-    queryset  = Review.objects.all()
-    serializer_class = ReviewSerializer
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [DjangoModelPermissions]
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request,*args, **kwargs)
-    
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-    
-        
 
 
 class ShowroomView(APIView):

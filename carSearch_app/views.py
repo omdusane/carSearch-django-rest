@@ -1,16 +1,40 @@
 from django.shortcuts import render
-from .models import Carlist, Showroomlist
+from .models import Carlist, Showroomlist, Review
 from django.http import JsonResponse
-from .serializers.serializers import CarSerializer, ShowroomSerializer
+from .serializers.serializers import CarSerializer, ShowroomSerializer, ReviewSerializer
 from rest_framework.response import  Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from rest_framework.views import APIView
-from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny, DjangoModelPermissions
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
+from rest_framework.generics import GenericAPIView
+
+class ReviewDetail(RetrieveModelMixin, GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request,*args, **kwargs)
+    
+class ReviewList(ListModelMixin, CreateModelMixin, GenericAPIView):
+    queryset  = Review.objects.all()
+    serializer_class = ReviewSerializer
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [DjangoModelPermissions]
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request,*args, **kwargs)
+    
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+        
+
 
 class ShowroomView(APIView):
-    authentication_classes = [BasicAuthentication]
+    authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
     # permission_classes = [AllowAny]
     def get(self, request):

@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from ..models import Carlist , Showroomlist, Review
 
-
 class ReviewSerializer(serializers.ModelSerializer):
+    apiuser = serializers.StringRelatedField(read_only = True)
     class Meta:
         model = Review
-        fields = "__all__"
+        exclude = ('car',)
+        # fields = "__all__"
 
 class CarSerializer(serializers.ModelSerializer):
     discounted_price = serializers.SerializerMethodField()

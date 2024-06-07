@@ -12,6 +12,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, DjangoModelPer
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin
 from rest_framework import generics
 from rest_framework.exceptions import ValidationError 
+from rest_framework_simplejwt.authentication import JWTAuthentication
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
 
@@ -31,7 +32,8 @@ class ReviewCreate(generics.CreateAPIView):
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    authentication_classes = [TokenAuthentication]
+    # authentication_classes = [TokenAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [AdminOrReadOnlyPermission]
     def get_queryset(self):
         pk = self.kwargs['pk']

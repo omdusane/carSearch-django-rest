@@ -145,6 +145,8 @@ REST_FRAMEWORK = {
         'review_detail_throttle': '1000/day',
         'showroom_viewset_scope' : '10/minute',
 
-    }
+    },
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 100
 
 }

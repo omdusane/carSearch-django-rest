@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from .serializers.serializers import CarSerializer, ShowroomSerializer, ReviewSerializer
 from .serializers.permissions import AdminOrReadOnlyPermission, ReviewUserorReadOnlyPermission
 from .serializers.throtlling import ReviewDetailThrottle, ReviewListThrottle
+from .serializers.pagination import ReviewListPagination
 from rest_framework.response import  Response
 from rest_framework.decorators import api_view
 from rest_framework import status, viewsets
@@ -39,6 +40,8 @@ class ReviewList(generics.ListAPIView):
     # authentication_classes = [JWTAuthentication]
     throttle_classes=[ReviewListThrottle, AnonRateThrottle]
     permission_classes = [AdminOrReadOnlyPermission]
+    pagination_class = ReviewListPagination
+
     def get_queryset(self):
         pk = self.kwargs['pk']
         return Review.objects.filter(car=pk)
